@@ -1,19 +1,21 @@
 package lesson_2;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class TransactionAnalyzer {
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private List<Transaction> transactions;
-    private DateTimeFormatter dateFormatter;
-
-    public TransactionAnalyzer(List<Transaction> transactions) {
-        this.transactions = transactions;
-        this.dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    }
 
     // Метод для розрахунку загального балансу
     public double calculateTotalBalance() {
@@ -28,7 +30,7 @@ public class TransactionAnalyzer {
     public int countTransactionsByMonth(String monthYear) {
         int count = 0;
         for (Transaction transaction : transactions) {
-            LocalDate date = LocalDate.parse(transaction.getDate(), dateFormatter);
+            LocalDate date = LocalDate.parse(transaction.getDate(), DATE_FORMATTER);
             String transactionMonthYear = date.format(DateTimeFormatter.ofPattern("MM-yyyy"));
             if (transactionMonthYear.equals(monthYear)) {
                 count++;
