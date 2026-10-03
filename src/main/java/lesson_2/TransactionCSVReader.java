@@ -1,28 +1,31 @@
 package lesson_2;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionCSVReader {
-    public List<Transaction> readTransactions(String filePath) {
+public abstract class TransactionCSVReader {
+
+    // Метод для парсингу рядка CSV та створення об'єкта Transaction
+    public static Transaction parseLine(String line) {
+        String[] values = line.split(",");
+        return new Transaction(values[0], Double.parseDouble(values[1]), values[2]);
+    }
+
+    // Метод для парсингу списку рядків CSV та створення списку об'єктів Transaction
+    public static List<Transaction> parseLines(List<String> lines) {
         List<Transaction> transactions = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-                String[] values = line.split(",");
-                Transaction transaction = new Transaction(values[0], Double.parseDouble(values[1]), values[2]);
-                transactions.add(transaction);
+        for (String line : lines) {
+            if (line == null || line.trim().isEmpty()) {
+                continue;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            transactions.add(parseLine(line));
         }
         return transactions;
+    }
+
+    // Метод для читання та парсингу транзакцій з файлу CSV
+    public static List<Transaction> readTransactions(String filePath) {
+        List<String> lines = DataReader.readLines(filePath);
+        return parseLines(lines);
     }
 }

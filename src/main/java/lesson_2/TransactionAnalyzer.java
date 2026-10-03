@@ -1,24 +1,16 @@
 package lesson_2;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class TransactionAnalyzer {
+public abstract class TransactionAnalyzer {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private List<Transaction> transactions;
 
     // Метод для розрахунку загального балансу
-    public double calculateTotalBalance() {
+    public static double calculateTotalBalance(List<Transaction> transactions) {
         double balance = 0;
         for (Transaction transaction : transactions) {
             balance += transaction.getAmount();
@@ -27,7 +19,7 @@ public class TransactionAnalyzer {
     }
 
     // Метод для підрахунку транзакцій за конкретний місяць і рік
-    public int countTransactionsByMonth(String monthYear) {
+    public static int countTransactionsByMonth(List<Transaction> transactions, String monthYear) {
         int count = 0;
         for (Transaction transaction : transactions) {
             LocalDate date = LocalDate.parse(transaction.getDate(), DATE_FORMATTER);
@@ -39,7 +31,8 @@ public class TransactionAnalyzer {
         return count;
     }
 
-    public List<Transaction> findTopExpenses() {
+    // Метод для пошуку топ-10 найбільших витрат
+    public static List<Transaction> findTopExpenses(List<Transaction> transactions) {
         return transactions.stream()
                 .filter(t -> t.getAmount() < 0) // Вибірка лише витрат (від'ємні значення)
                 .sorted(Comparator.comparing(Transaction::getAmount)) // Сортування за сумою
