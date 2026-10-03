@@ -13,9 +13,14 @@ public class Main {
 //        }
 
         TransactionAnalyzer analyzer = new TransactionAnalyzer(transactions);
-        double totalBalance = analyzer.calculateTotalBalance();
+        TransactionReportGenerator reportGenerator = new TransactionReportGenerator();
 
-        System.out.println("Загальний баланс: " + totalBalance);
+        double totalBalance = analyzer.calculateTotalBalance();
+        reportGenerator.printBalanceReport(totalBalance);
+
+        String monthYear = "01-2024";
+        int transactionsCount = analyzer.countTransactionsByMonth(monthYear);
+        reportGenerator.printTransactionsCountByMonth(monthYear, transactionsCount);
 
     }
 }
