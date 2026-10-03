@@ -39,6 +39,42 @@ public abstract class TransactionAnalyzer {
                 .limit(10) // Обмеження результату першими 10 записами
                 .collect(Collectors.toList()); // Збір результату в список
     }
+
+    // Метод для пошуку найбільшої витрати за вказаний період
+    public static Transaction findMaxExpenseInRange(List<Transaction> transactions, LocalDate startDate, LocalDate endDate) {
+        return transactions.stream()
+                .filter(t -> t.getAmount() < 0)
+                .filter(t -> {
+                    LocalDate date = LocalDate.parse(t.getDate(), DATE_FORMATTER);
+                    return !date.isBefore(startDate) && !date.isAfter(endDate);
+                })
+                .min(Comparator.comparing(Transaction::getAmount))
+                .orElse(null);
+    }
+
+    public static Transaction findMaxExpenseInRange(List<Transaction> transactions, String startDateStr, String endDateStr) {
+        LocalDate startDate = LocalDate.parse(startDateStr, DATE_FORMATTER);
+        LocalDate endDate = LocalDate.parse(endDateStr, DATE_FORMATTER);
+        return findMaxExpenseInRange(transactions, startDate, endDate);
+    }
+
+    // Метод для пошуку найменшої витрати за вказаний період
+    public static Transaction findMinExpenseInRange(List<Transaction> transactions, LocalDate startDate, LocalDate endDate) {
+        return transactions.stream()
+                .filter(t -> t.getAmount() < 0)
+                .filter(t -> {
+                    LocalDate date = LocalDate.parse(t.getDate(), DATE_FORMATTER);
+                    return !date.isBefore(startDate) && !date.isAfter(endDate);
+                })
+                .max(Comparator.comparing(Transaction::getAmount))
+                .orElse(null);
+    }
+
+    public static Transaction findMinExpenseInRange(List<Transaction> transactions, String startDateStr, String endDateStr) {
+        LocalDate startDate = LocalDate.parse(startDateStr, DATE_FORMATTER);
+        LocalDate endDate = LocalDate.parse(endDateStr, DATE_FORMATTER);
+        return findMinExpenseInRange(transactions, startDate, endDate);
+    }
 }
 
 
